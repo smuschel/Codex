@@ -77,6 +77,7 @@ class UserPrefs {
     tabSize = 4;
     sidebarWidth = 275;
     showCodeOverlay = true;
+    pageWidth = 800;
 }
 
 class Save {
@@ -158,7 +159,7 @@ var normalMenu;
 var editingMenu;
 
 var sidebarWidth = 275;
-
+var pageWidth = 800;
 var favoritePages = [];
 
 var destroyOpenedNotebooks = false;
@@ -705,6 +706,9 @@ function fixPrefs() {
     if (typeof prefs.showCodeOverlay === "undefined") {
         prefs.showCodeOverlay = true;
     }
+    if (typeof prefs.pageWidth === "undefined") {
+        prefs.pageWidth = 800;
+    }
 }
 
 /**
@@ -818,6 +822,8 @@ function applyPrefsFromFile() {
 
     resizeSidebar(prefs.sidebarWidth);
 
+    document.getElementById('pageWidth').value = prefs.pageWidth;
+    resizePage(prefs.pageWidth);
     $('#showLanguageOverlayCheck').prop("checked", prefs.showCodeOverlay);
     if (prefs.showCodeOverlay === true) {
         document.getElementById('codeOverlayLink').href = "css/codeoverlay.css";
@@ -917,6 +923,9 @@ function applyPrefsRuntime(needsRestart = false) {
         document.getElementById('dataDirInput').innerText = prefs.dataDir;
         alert("The specified save directory could not be accessed. Reverting to default.");
     }
+
+    prefs.pageWidth = document.getElementById('pageWidth').value;
+    resizePage(prefs.pageWidth);
 
     savePrefs();
 
@@ -1856,6 +1865,12 @@ function resizeSidebar(width) {
             document.documentElement.style.setProperty('--sidebar-width', `${sidebarWidth}px`);   
         }
     }
+}
+
+function resizePage(width) {
+    pageWidth = width;
+    prefs.pageWidth = width;
+    document.documentElement.style.setProperty('--page-width', `${pageWidth}px`);
 }
 
 async function DataDirDialog() {
